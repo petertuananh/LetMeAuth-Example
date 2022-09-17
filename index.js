@@ -1,13 +1,8 @@
 const express = require('express');
 const app = express()
 const axios = require("axios")
-var passport = require('passport');
-var passportLocal = require('passport-local');
-var expressSession = require('express-session');
 const cookieParser = require('cookie-parser');
 const config = require("./config.json")
-app.use(expressSession({ secret: '#@*#&%#%^%#$##@*#&%#%^%#$##@*#&%#%^%#$#' }))
-app.use(passport.session());
 app.set('view engine', 'ejs');
 app.use(cookieParser())
 
@@ -27,6 +22,8 @@ async function checkAuth(req, res, next) {
     if (data.data.id) {
         req.user = data.data
         return next()
+    } else {
+        res.redirect("/login")
     }
 }
-app.listen(3000)
+app.listen(config.port)
