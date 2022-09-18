@@ -3,6 +3,7 @@ const app = express()
 const axios = require("axios")
 const cookieParser = require('cookie-parser');
 const config = require("./config.json")
+const letmeauth = require("letmeauth")
 app.set('view engine', 'ejs');
 app.use(cookieParser())
 
@@ -18,12 +19,17 @@ app.get("/callback", async (req, res) => {
     return res.redirect(req.cookies.redirect ? req.cookies.redirect : '/')
 })
 async function checkAuth(req, res, next) {
-    const data = await axios.default.get(`https://letmeauth.xyz/oauth2/checktoken?app_id=${config.app_id}&token=${req.cookies.token}`)
-    if (data.data.id) {
-        req.user = data.data
-        return next()
-    } else {
-        res.redirect("/login")
-    }
+    letmeauth.checkToken({
+        token : req.cookies.token,
+        app_id : config.app_id
+    }).then(result => {
+        if (result.result.id) {
+            req.user = result.result
+            return next()
+        }
+        return res.redirect("/login")
+    })
 }
-app.listen(config.port)
+app.listen(config.port, () => {
+    console.log(`Working at port ${config.port}`)
+})
