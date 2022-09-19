@@ -3,7 +3,7 @@ const app = express()
 const axios = require("axios")
 const cookieParser = require('cookie-parser');
 const config = require("./config.json")
-const letmeauth = require("letmeauth")
+const letmeauth = require("../Lib")
 app.set('view engine', 'ejs');
 app.use(cookieParser())
 
@@ -19,12 +19,12 @@ app.get("/callback", async (req, res) => {
     return res.redirect(req.cookies.redirect ? req.cookies.redirect : '/')
 })
 async function checkAuth(req, res, next) {
-    letmeauth.checkToken({
+    const result = await letmeauth.checkToken({
         token : req.cookies.token,
         app_id : config.app_id
-    }).then(result => {
-        if (result.result.id) {
-            req.user = result.result
+    }).then(async result => {
+        if (result.id) {
+            req.user = result
             return next()
         }
         return res.redirect("/login")
