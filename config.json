@@ -1,5 +1,6 @@
 {
     "port" : 3000,
-    "app_id" : "66147046285836533",
+    "app_id" : "63388761624347684",
+    "app_secret" : "suPcTkNmhOJSHBMlVMrn",
     "callback_url" : "http://localhost:3000/callback"
 }
