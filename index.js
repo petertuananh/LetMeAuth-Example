@@ -28,10 +28,10 @@ async function checkAuth(req, res, next) {
     letmeauth.checkToken({
         token: req.cookies.token,
         app_id: config.app_id
-    }).then(async result => {
+    })
+    .then(async result => {
         if (result.error) {
             console.log(result.error)
-            return res.sendStatus(500)
         } else if (result.user) {
             req.user = result.user
             return next()
